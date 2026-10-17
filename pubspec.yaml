@@ -36,8 +36,11 @@ dependencies:
   google_nav_bar: ^5.0.6
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
-  sqflite: ^2.4.4+1
+  sqflite: ^2.4.4+2
   path: ^1.9.1
+  table_calendar: ^3.3.0
+  badges: ^4.0.1
+  image_picker: ^1.2.4
   
 
 dev_dependencies:

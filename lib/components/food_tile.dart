@@ -1,103 +1,95 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/food.dart';
-import '../components/theme_provider.dart';
+import '../models/status_articulo.dart';
 
 class FoodTile extends StatelessWidget {
-  final Food food;
-  final void Function()? onTap;
+  final String nombre;
+  final String? imagenPath;
+  final int cantidad;
+  final String unidad;
+  final DateTime? fechaCaducidad;
+  final EstatusArticulo estatus;
+  final VoidCallback onAgregarCarrito;
 
   const FoodTile({
     super.key,
-    required this.food,
-    required this.onTap,
+    required this.nombre,
+    this.imagenPath,
+    required this.cantidad,
+    required this.unidad,
+    this.fechaCaducidad,
+    required this.estatus,
+    required this.onAgregarCarrito,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-
-    return Container(
-      margin: const EdgeInsets.only(left: 25),
-      width: 280,
-      decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white, // Tarjeta oscura/clara
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Imagen del Platillo
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.asset(
-              food.imagePath,
-              height: 160,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(10),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            width: 60,
+            height: 60,
+            color: Colors.grey.shade200,
+            child: imagenPath != null && imagenPath!.isNotEmpty
+                ? Image.file(File(imagenPath!), fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Icon(Icons.fastfood, size: 30))
+                : const Icon(Icons.fastfood, size: 30, color: Colors.grey),
           ),
-
-          // Descripción en color gris adaptable
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              food.description,
-              style: TextStyle(
-                color: isDarkMode ? Colors.grey[400] : Colors.grey[700], // Texto en gris claro en modo oscuro
-                fontSize: 14,
-              ),
-            ),
-          ),
-
-          // Nombre, Precio y Botón Agregar
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0, bottom: 15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+        title: Text(
+          nombre,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      food.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: isDarkMode ? Colors.white : Colors.black87,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: estatus.color.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: estatus.color, width: 1),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(estatus.icono, size: 14, color: estatus.color),
+                      const SizedBox(width: 4),
+                      Text(
+                        estatus.etiqueta,
+                        style: TextStyle(
+                            color: estatus.color,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      '\$${food.price}',
-                      style: const TextStyle(
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: onTap,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      color: Colors.redAccent,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text('Stock: $cantidad $unidad'),
+            if (fechaCaducidad != null)
+              Text(
+                'Caduca: ${fechaCaducidad!.day}/${fechaCaducidad!.month}/${fechaCaducidad!.year}',
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+          ],
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.add_shopping_cart, color: Colors.teal),
+          onPressed: onAgregarCarrito,
+          tooltip: 'Agregar al carrito',
+        ),
       ),
     );
   }
