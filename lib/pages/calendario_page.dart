@@ -171,6 +171,7 @@ class _CalendarioPageState extends State<CalendarioPage> {
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: lotesDelDia.length,
+                  // ignore: unnecessary_underscores
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final lote = lotesDelDia[index];

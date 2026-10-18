@@ -5,7 +5,7 @@ import '../data/consumo_repository.dart';
 import '../data/producto_repository.dart';
 import '../data/notificaciones_service.dart';
 import '../models/producto.dart';
-
+import '../components/indicador_nivel_stock.dart';
 class ConsumoPage extends StatefulWidget {
   const ConsumoPage({super.key});
 
@@ -109,6 +109,7 @@ class _ConsumoPageState extends State<ConsumoPage> {
       }).join('\n');
 
       await showDialog<void>(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Consumo registrado'),
@@ -268,8 +269,30 @@ class _ConsumoPageState extends State<ConsumoPage> {
                       'no realizará ningún descuento.',
                       textAlign: TextAlign.center,
                     ),
+                    Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Stock disponible (vigente)',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          // AQUÍ SE USA PARA MOSTRAR EL NIVEL
+                          StockStatusProgress(
+                            stockDisponible: _stockDisponible,
+                            stockMinimo: 2, // O el stock mínimo configurado para el producto
+                            unidad: 'unidades',
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                   ],
                 ),
     );
   }
 }
+

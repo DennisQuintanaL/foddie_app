@@ -16,6 +16,8 @@ import 'historial_compras_page.dart';
 import 'lotes_page.dart';
 import 'productos_page.dart';
 import 'tiendas_page.dart';
+import '../components/hoja_consumo_rapido.dart';
+import '../components/indicador_nivel_stock.dart';
 
 class InicioPage extends StatefulWidget {
   const InicioPage({super.key});
@@ -258,70 +260,100 @@ class _InicioPageState extends State<InicioPage> {
   Widget _tarjetaAlerta(Map<String, Object?> producto) {
     final color = _colorEstado(producto);
     final stock = _numero(producto, 'stock_disponible');
+    final stockMinimo = _numero(producto, 'stock_minimo');
     final unidad = _texto(producto, 'unidad');
 
     return Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
-        leading: _imagenProducto(producto),
-        title: Text(
-          _texto(producto, 'producto_nombre'),
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Existencias disponibles: $stock $unidad'),
-              const SizedBox(height: 5),
-              Text(
-                _estadoProducto(producto),
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(12),
+          leading: _imagenProducto(producto),
+          title: Text(
+            _texto(producto, 'producto_nombre'),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-        ),
-        trailing: IconButton(
-          tooltip: 'Agregar a la lista de compras',
-          icon: const Icon(Icons.add_shopping_cart),
-          onPressed: () async {
-            final id = producto['producto_id'];
-
-            if (id is! num) return;
-
-            try {
-              await _carritoRepository.agregarProducto(id.toInt());
-
-              if (!mounted) return;
-
-              await _cargarDatos();
-
-              if (!mounted) return;
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Producto agregado a la lista de compras.'),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // AQUÍ SE INTEGRA EL WIDGET DE BARRA DE PROGRESO
+                StockStatusProgress(
+                  stockDisponible: stock,
+                  stockMinimo: stockMinimo,
+                  unidad: unidad,
                 ),
-              );
-            } catch (e) {
-              if (!mounted) return;
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('No se pudo agregar el producto: $e'),
+                const SizedBox(height: 6),
+                Text(
+                  _estadoProducto(producto),
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              );
-            }
-          },
+              ],
+            ),
+          ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Botón para desplegar el modal de Consumo Rápido FEFO
+            IconButton(
+              tooltip: 'Consumo rápido',
+              icon: const Icon(Icons.restaurant, color: Colors.teal),
+              onPressed: () {
+                final id = producto['producto_id'];
+                if (id is! num) return;
+
+                QuickConsumeSheet.mostrar(
+                  context,
+                  productoId: id.toInt(),
+                  nombreProducto: _texto(producto, 'producto_nombre'),
+                  stockDisponible: stock,
+                  unidad: unidad,
+                  onConsumido: _cargarDatos, // Refresca las métricas y alertas al consumir
+                );
+              },
+            ),
+            // Botón para agregar el artículo a la lista de compras
+            IconButton(
+              tooltip: 'Agregar a la lista de compras',
+              icon: const Icon(Icons.add_shopping_cart),
+              onPressed: () async {
+                final id = producto['producto_id'];
+
+                if (id is! num) return;
+
+                try {
+                  await _carritoRepository.agregarProducto(id.toInt());
+
+                  if (!mounted) return;
+
+                  await _cargarDatos();
+
+                  if (!mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Producto agregado a la lista de compras.'),
+                    ),
+                  );
+                } catch (e) {
+                  if (!mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('No se pudo agregar el producto: $e'),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
   }
-
+  
   Widget _tarjetaNavegacion({
     required String titulo,
     required String descripcion,
