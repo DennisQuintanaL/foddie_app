@@ -1,10 +1,10 @@
-# 🍏 Inventario Doméstico App (Foddie App)
+# Inventario Doméstico App (Foddie App)
 
 Aplicación móvil desarrollada en **Flutter** con almacenamiento local en **SQLite** para la gestión eficiente del inventario de la alacena del hogar. Su principal objetivo es prevenir el desperdicio de alimentos mediante la trazabilidad de caducidades utilizando el criterio **FEFO** (*First Expired, First Out*), notificaciones locales, gestión de lotes y análisis de gastos.
 
 ---
 
-## 🚀 Características Principales
+## Características Principales
 
 * **Control de Inventario y Lotes:** Seguimiento de existencias por producto y lotes individuales con fecha de vencimiento.
 * **Criterio FEFO:** Descuento automático prioritario del lote que caduca más pronto.
@@ -17,19 +17,19 @@ Aplicación móvil desarrollada en **Flutter** con almacenamiento local en **SQL
 
 ---
 
-## 📱 Capturas de Pantalla y Evidencias
+## Capturas de Pantalla y Evidencias
 
-### 📊 Pantalla Principal e Indicadores de Stock
+###  Pantalla Principal e Indicadores de Stock
 | Estado de Stock Bajo | Estado de Producto Agotado | Pantalla sin Alertas |
 | :---: | :---: | :---: |
 | <img src="evidencias/evidencia 3.jpeg" width="230"/> | <img src="evidencias/evidencia 8.jpeg" width="230"/> | <img src="evidencias/evidencia 10.jpeg" width="230"/> |
 
-### 🍽️ Consumo de Inventario y Notificaciones Locales
+###  Consumo de Inventario y Notificaciones Locales
 | Confirmación de Consumo FEFO | Notificación del Sistema Android | Prueba de Notificaciones |
 | :---: | :---: | :---: |
 | <img src="evidencias/evidencia 4.jpeg" width="230"/> | <img src="evidencias/evidencia 5.jpeg" width="230"/> | <img src="evidencias/evidencia 6.jpeg" width="230"/> |
 
-### 📈 Estadísticas del Inventario
+###  Estadísticas del Inventario
 | Módulo de Estadísticas y Gráfica por Tienda |
 | :---: |
 | <img src="evidencias/evidencia 1.jpeg" width="260"/> |
