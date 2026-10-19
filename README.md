@@ -76,9 +76,11 @@ lib/
 │   ├── productos_page.dart
 │   └── tiendas_page.dart
 └── main.dart                    # Punto de entrada de la aplicación
+```
+---
 
-**Integraciones realizadas por el equipo:**
-🔹 Jesús Alejandro Rojas Moreno
+### Integraciones realizadas por el equipo:
+🔹 **Jesús Alejandro Rojas Moreno**
 
 Base de Datos: Diseño, modelado y construcción de la base de datos local SQLite. Estructura del codigo DataBaseHelper para darle la implementacion del mapeo y conexiones entre objetos y llaves.
 
@@ -96,7 +98,7 @@ Administración de Tiendas y módulo de Estadísticas.
 
 Alertas: Configuración e implementación del motor de alertas del sistema.
 
-🔹 Dennis Adrián Quintana
+🔹 **Dennis Adrián Quintana Lazgare**
 
 Módulo de Calendario para monitoreo por fechas.
 
